@@ -127,7 +127,7 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 String post_data = URLEncoder.encode("name", "UTF-8")+"="+URLEncoder.encode(name, "UTF-8")+"&"
-                        + URLEncoder.encode("surname", "UTF-8")+"="+URLEncoder.encode(date, "UTF-8")+"&"
+                        + URLEncoder.encode("date", "UTF-8")+"="+URLEncoder.encode(date, "UTF-8")+"&"
                         + URLEncoder.encode("start_time", "UTF-8")+"="+URLEncoder.encode(start_time, "UTF-8")+"&"
                         + URLEncoder.encode("end_time", "UTF-8")+"="+URLEncoder.encode(end_time, "UTF-8");
                 bufferedWriter.write(post_data);
@@ -158,7 +158,7 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setTitle("Login Status");
+        alertDialog.setTitle("Status");
     }
 
     @Override
