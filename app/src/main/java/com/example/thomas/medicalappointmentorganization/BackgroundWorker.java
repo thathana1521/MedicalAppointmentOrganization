@@ -30,6 +30,7 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
         String login_url = "http://10.0.2.2/login.php";
         String register_url = "http://10.0.2.2/register.php";
         String events_url = "http://10.0.2.2/events.php";
+
         if(type.equals("login")) {
             try {
                 String user_name = params[1];
@@ -111,13 +112,12 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
                 e.printStackTrace();
             }
 
-        }
-        else if(type.equals("Event")) {
+        } else if (type.equals("Event")) {
             try {
                 String name = params[1];
                 String date = params[2];
                 String start_time = params[3];
-                String end_time = params[3];
+                String end_time = params[4];
 
                 URL url = new URL(events_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -150,8 +150,8 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
+
         return null;
     }
 

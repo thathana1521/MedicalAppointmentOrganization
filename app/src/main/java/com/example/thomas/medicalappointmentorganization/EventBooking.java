@@ -16,6 +16,14 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -75,13 +83,11 @@ public class EventBooking extends AppCompatActivity implements DatePickerDialog.
     }
 
 
-    public void onAddEvent(View view) {
+    public void onAddEvent(View view){
         String type = "Event";
         name = (EditText)findViewById(R.id.editText_Name);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-        System.out.println("type = "+type+" name ="+name.getText().toString()+" date= "+date+" start = "+start_time+" end = "+end_time);
-        backgroundWorker.execute(type, name.getText().toString(), dateFormat.format(date), start_time.toString(), end_time.toString());
+        backgroundWorker.execute(type, name.getText().toString(), date.toString(), start_time.toString(), end_time.toString());
     }
 
 

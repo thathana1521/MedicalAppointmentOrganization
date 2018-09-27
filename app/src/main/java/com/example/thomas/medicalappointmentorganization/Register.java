@@ -8,8 +8,8 @@ import android.widget.EditText;
 
 public class Register extends AppCompatActivity {
 
-    EditText name, surname, age, username, password;
-    CheckBox identity_doctor, identity_patient;
+    private EditText name, surname, age, username, password;
+    private CheckBox identity_doctor, identity_patient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +25,8 @@ public class Register extends AppCompatActivity {
 
     public void OnRegister(View view) {
         String type = "register";
-        String str_name = name.getText().toString();
-        String str_surname = surname.getText().toString();
+        String str_name = name.getText().toString().trim();
+        String str_surname = surname.getText().toString().trim();
         String str_age = age.getText().toString();
         String str_username = username.getText().toString();
         String str_password = password.getText().toString();

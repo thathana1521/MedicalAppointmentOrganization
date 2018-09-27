@@ -1,71 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    android:background="#304769"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="50dp"
+    tools:context="com.example.thomas.medicalappointmentorganization.Login">
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="131dp"
-        android:layout_marginTop="100dp"
-        android:onClick="OnLogin"
-        android:text="Sign In"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_password" />
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_lock_outline_white" />
 
     <EditText
         android:id="@+id/editText_username"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="41dp"
-        android:ems="10"
+        android:layout_margin="5dp"
+        android:background="@android:color/white"
+        android:hint="@string/username"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        android:padding="10dp" />
+
 
     <EditText
         android:id="@+id/editText_password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/editText_username"
-        app:layout_constraintTop_toBottomOf="@+id/editText_username"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:onClick="OpenReg"
-        android:text="Register"
-        app:layout_constraintStart_toStartOf="@+id/button_login"
-        app:layout_constraintTop_toBottomOf="@+id/button_login" />
+        android:layout_margin="5dp"
+        android:background="@android:color/white"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:padding="10dp" />
 
     <CheckBox
         android:id="@+id/checkBox_doctor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Doctor"
-        app:layout_constraintBaseline_toBaselineOf="@+id/checkBox_patient"
-        app:layout_constraintStart_toStartOf="@+id/editText_password" />
+        android:text="Doctor" />
 
     <CheckBox
         android:id="@+id/checkBox_patient"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="26dp"
-        android:text="Patient"
-        app:layout_constraintEnd_toEndOf="@+id/editText_password"
-        app:layout_constraintTop_toBottomOf="@+id/editText_password" />
+        android:text="Patient" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:layout_margin="5dp"
+        android:background="#f05924"
+        android:text="@string/sign_in"
+        android:textColor="@android:color/white"
+        android:onClick="OnLogin"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/not_having_account"
+        android:textColor="#ccc" />
+
+    <Button
+        android:id="@+id/btnLoginRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#aaa"
+        android:text="@string/register"
+        android:textColor="@android:color/white"
+        android:onClick="OpenReg"/>
+
+
+</LinearLayout>
