@@ -41,6 +41,7 @@ public class Login extends AppCompatActivity {
 
         BackgroundWorker backgroundWorker = new BackgroundWorker(this);
         backgroundWorker.execute(type, username, password, String.valueOf(identidyId));
+
     }
     public void OpenReg(View view) {
         startActivity(new Intent(this, Register.class));

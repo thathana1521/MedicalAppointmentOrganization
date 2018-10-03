@@ -1,10 +1,26 @@
 package com.example.thomas.medicalappointmentorganization;
 
+import android.app.VoiceInteractor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
@@ -24,12 +40,18 @@ public class Register extends AppCompatActivity {
     }
 
     public void OnRegister(View view) {
-        String type = "register";
-        String str_name = name.getText().toString().trim();
-        String str_surname = surname.getText().toString().trim();
-        String str_age = age.getText().toString();
-        String str_username = username.getText().toString();
-        String str_password = password.getText().toString();
+        registerUser();
+
+    }
+
+
+    private void registerUser() {
+
+        final String str_name = name.getText().toString().trim();
+        final String str_surname = surname.getText().toString().trim();
+        final String str_age = age.getText().toString();
+        final String str_username = username.getText().toString();
+        final String str_password = password.getText().toString();
         int identidyId;
         //This sets only one checkBox checked.
         if(identity_doctor.isChecked()) {
@@ -43,12 +65,42 @@ public class Register extends AppCompatActivity {
         else {
             identidyId = 1;
         }
+        final String str_identity = String.valueOf(identidyId);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
 
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"),Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-        backgroundWorker.execute(type, str_name, str_surname, str_age, str_username, str_password, String.valueOf(identidyId) );
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("name",str_name);
+                params.put("surname",str_surname);
+                params.put("age",str_age);
+                params.put("username",str_username);
+                params.put("password",str_password);
+                params.put("identity",str_identity);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
-
 
 }

@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+
 public class BackgroundWorker extends AsyncTask<String, String, String> {
 
     Context context;
@@ -27,9 +28,7 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... params) {
         String type = params[0];
-        String login_url = "http://10.0.2.2/login.php";
-        String register_url = "http://10.0.2.2/register.php";
-        String events_url = "http://10.0.2.2/events.php";
+
 
         if(type.equals("login")) {
             try {
@@ -37,7 +36,7 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
                 String password = params[2];
                 String identity = params[3];
 
-                URL url = new URL(login_url);
+                URL url = new URL(Constants.login_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
@@ -78,7 +77,7 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
                 String password = params[5];
                 String identity = params[6];
 
-                URL url = new URL(register_url);
+                URL url = new URL(Constants.REGISTER_URL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
@@ -112,14 +111,15 @@ public class BackgroundWorker extends AsyncTask<String, String, String> {
                 e.printStackTrace();
             }
 
-        } else if (type.equals("Event")) {
+        }
+        else if (type.equals("Event")) {
             try {
                 String name = params[1];
                 String date = params[2];
                 String start_time = params[3];
                 String end_time = params[4];
 
-                URL url = new URL(events_url);
+                URL url = new URL(Constants.events_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
