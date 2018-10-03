@@ -41,13 +41,15 @@
         android:id="@+id/checkBox_doctor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Doctor" />
+        android:text="Doctor"
+        android:onClick="doctorCheckBoxClick"/>
 
     <CheckBox
         android:id="@+id/checkBox_patient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Patient" />
+        android:text="Patient"
+        android:onClick="patientCheckBoxClick"/>
 
     <Button
         android:id="@+id/btnLogin"
@@ -76,6 +78,5 @@
         android:text="@string/register"
         android:textColor="@android:color/white"
         android:onClick="OpenReg"/>
-
 
 </LinearLayout>

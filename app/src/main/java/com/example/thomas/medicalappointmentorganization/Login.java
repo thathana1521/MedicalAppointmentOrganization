@@ -1,15 +1,35 @@
 package com.example.thomas.medicalappointmentorganization;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
     EditText UsernameET, PasswordET;
     CheckBox identity_doctor, identity_patient;
+    private ProgressDialog progressDialog;
+    private int identityId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,32 +38,87 @@ public class Login extends AppCompatActivity {
         PasswordET = (EditText)findViewById(R.id.editText_password);
         identity_doctor = (CheckBox)findViewById(R.id.checkBox_doctor);
         identity_patient = (CheckBox)findViewById(R.id.checkBox_patient);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
     }
 
     public void OnLogin(View view) {
-        String username = UsernameET.getText().toString();
-        String password = PasswordET.getText().toString();
-        String type = "login";
-        int identidyId;
-        //This sets only one checkBox checked.
-        if(identity_doctor.isChecked()) {
-            identity_patient.setChecked(false);
-        }
+        final String username = UsernameET.getText().toString().trim();
+        final String password = PasswordET.getText().toString().trim();
 
-        //identityId = 0 if user is a doctor. Else 1 (patient)
-        if(identity_doctor.isChecked()){
-            identidyId = 0;
-        }
-        else {
-            identidyId = 1;
-        }
-        System.out.println("Identity = "+identidyId);
+        progressDialog.show();
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                Constants.login_url,
+                new Response.Listener<String>() {
+                    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            if(!object.getBoolean("error")){
+                                //that means the user successfully authenticated
+                                SharedPreManager.getInstance(getApplicationContext())
+                                        .userLogin(
+                                                object.getInt("id"),
+                                                object.getString("username"),
+                                                object.getString("surname")
+                                        );
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        "User login successful",
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                            else {
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        object.getString("message"),
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                error.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("username", username);
+                params.put("password", password);
+                params.put("identity", String.valueOf(identityId));
+                return params;
+            }
+        };
 
-        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-        backgroundWorker.execute(type, username, password, String.valueOf(identidyId));
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
 
     }
     public void OpenReg(View view) {
         startActivity(new Intent(this, Register.class));
+    }
+
+    public void doctorCheckBoxClick(View view) {
+        identity_patient.setChecked(false);
+        identityId=0;
+    }
+
+    public void patientCheckBoxClick(View view) {
+        identity_doctor.setChecked(false);
+        identityId=1;
     }
 }
