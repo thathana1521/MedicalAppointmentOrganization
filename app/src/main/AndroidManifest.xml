@@ -23,7 +23,8 @@
         <activity android:name=".Login" />
         <activity android:name=".EventBooking" />
         <activity android:name=".PickDate" />
-        <activity android:name=".PatientActivity"></activity>
+        <activity android:name=".PatientActivity" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

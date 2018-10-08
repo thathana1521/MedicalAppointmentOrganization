@@ -11,10 +11,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
         UsernameET = (EditText)findViewById(R.id.editText_username);
         PasswordET = (EditText)findViewById(R.id.editText_password);
+
     }
+
+
 
     public void OpenLogin(View view) {
         startActivity(new Intent(this, Login.class));

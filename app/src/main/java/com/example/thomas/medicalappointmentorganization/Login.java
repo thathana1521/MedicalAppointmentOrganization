@@ -34,6 +34,13 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        /*if ( SharedPreManager.getInstance(this).isLoggedIn()) {
+            finish();
+            startActivity(new Intent(this, ProfileActivity.class));
+            return;
+        }*/
+
         UsernameET = (EditText)findViewById(R.id.editText_username);
         PasswordET = (EditText)findViewById(R.id.editText_password);
         identity_doctor = (CheckBox)findViewById(R.id.checkBox_doctor);
@@ -46,28 +53,49 @@ public class Login extends AppCompatActivity {
         final String username = UsernameET.getText().toString().trim();
         final String password = PasswordET.getText().toString().trim();
 
-        progressDialog.show();
+        //progressDialog.show();
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 Constants.login_url,
                 new Response.Listener<String>() {
-                    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
+
                             JSONObject object = new JSONObject(response);
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    object.toString(),
+                                    Toast.LENGTH_LONG
+                            ).show();
+
+
                             if(!object.getBoolean("error")){
                                 //that means the user successfully authenticated
+
+                                /*if(SharedPreManager.getInstance(Login.this).userLogin(object.getInt("id"),
+                                        object.getString("username"),
+                                        object.getString("surname"),
+                                        object.getString("identity"))){
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "TRUE",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }*/
                                 SharedPreManager.getInstance(getApplicationContext())
                                         .userLogin(
                                                 object.getInt("id"),
                                                 object.getString("username"),
-                                                object.getString("surname")
+                                                object.getString("age"),
+                                                object.getString("surname"),
+                                                object.getString("identity")
                                         );
                                 Toast.makeText(
                                         getApplicationContext(),
-                                        "User login successful",
+                                        "User successfully login",
                                         Toast.LENGTH_LONG
                                 ).show();
                             }
@@ -78,6 +106,9 @@ public class Login extends AppCompatActivity {
                                         Toast.LENGTH_LONG
                                 ).show();
                             }
+
+                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                            finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -87,6 +118,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
+
                         Toast.makeText(
                                 getApplicationContext(),
                                 error.getMessage(),
@@ -96,18 +128,18 @@ public class Login extends AppCompatActivity {
                 }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String,String> params = new HashMap<>();
                 params.put("username", username);
+
                 params.put("password", password);
-                params.put("identity", String.valueOf(identityId));
                 return params;
             }
         };
 
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
-
     }
+
     public void OpenReg(View view) {
         startActivity(new Intent(this, Register.class));
     }
