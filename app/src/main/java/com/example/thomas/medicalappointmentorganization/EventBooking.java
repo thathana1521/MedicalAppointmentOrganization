@@ -16,6 +16,15 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -30,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SimpleTimeZone;
 
 import static android.app.PendingIntent.getActivity;
@@ -40,17 +51,17 @@ public class EventBooking extends AppCompatActivity implements DatePickerDialog.
     Time start_time=null;
     Time end_time;
     Date date;
+    int approved = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_booking);
 
-
+        name = (EditText)findViewById(R.id.editText_Name);
         final Button selectDatebtn = (Button)findViewById(R.id.button_SelectDate);
         final Button selectStartbtn = (Button)findViewById(R.id.button_SelectStartTime);
         final Button selectEndbtn = (Button)findViewById(R.id.button_SelectEndTime);
-
     }
 
     public void onBtnPickDateClicked (View view){
@@ -75,7 +86,6 @@ public class EventBooking extends AppCompatActivity implements DatePickerDialog.
         Calendar c = Calendar.getInstance();
         if(start_time==null){
             start_time = new Time(c.getTime().getTime());
-
         }
         else {
             end_time = new Time(c.getTime().getTime());
@@ -84,11 +94,45 @@ public class EventBooking extends AppCompatActivity implements DatePickerDialog.
 
 
     public void onAddEvent(View view){
-        String type = "Event";
-        name = (EditText)findViewById(R.id.editText_Name);
-        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-        backgroundWorker.execute(type, name.getText().toString(), date.toString(), start_time.toString(), end_time.toString());
+
+        final String str_name = name.getText().toString().trim();
+        final String str_date = date.toString().trim();
+        final String str_startTime = start_time.toString().trim();
+        final String str_endTime = end_time.toString().trim();
+        final String str_approved = Integer.toString(approved);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.EVENTS_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"),Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("name",str_name);
+                params.put("date",str_date);
+                params.put("start_time",str_startTime);
+                params.put("end_time",str_endTime);
+                params.put("approoved",str_approved);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
-
-
 }
